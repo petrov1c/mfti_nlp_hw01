@@ -11,12 +11,13 @@ FULL = bool(int(os.environ['FULL']))
 learning_rate = float(os.environ['learning_rate'])
 
 SEED = 1985
-TRAIN_COLUMNS = ['user', 'track', 'artist', 'pop', 'duration']
+TRAIN_COLUMNS = ['user', 'track', 'artist', 'genre', 'pop', 'duration']
 
 tracks = pd.read_json("data/tracks.json", lines=True)
 train_data = pd.read_csv("data/train.csv")
 
 train_data = pd.merge(train_data, tracks, how='left', on='track')
+train_data.genre = train_data.genre.map(lambda genres: genres[0])
 
 train_split, val_split = train_test_split(train_data, test_size=0.1, random_state=SEED)
 
@@ -30,8 +31,8 @@ else:
 X_val = pd.DataFrame(val_split[TRAIN_COLUMNS])
 y_val = val_split['time']
 
-train_pool = Pool(data=X_train, label=y_train, cat_features=['user', 'track', 'artist'])
-val_pool = Pool(data=X_val, label=y_val, cat_features=['user', 'track', 'artist'])
+train_pool = Pool(data=X_train, label=y_train, cat_features=['user', 'track', 'artist', 'genre'])
+val_pool = Pool(data=X_val, label=y_val, cat_features=['user', 'track', 'artist', 'genre'])
 
 model = CatBoostRegressor(
     iterations=ITERATIONS,
