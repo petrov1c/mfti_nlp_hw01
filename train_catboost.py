@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 ITERATIONS = int(os.environ['ITERATIONS'])
 FULL = bool(int(os.environ['FULL']))
+learning_rate = float(os.environ['learning_rate'])
 
 SEED = 42
 TRAIN_COLUMNS = ['user', 'track', 'artist', 'pop', 'duration']
@@ -34,7 +35,7 @@ val_pool = Pool(data=X_val, label=y_val, cat_features=['user', 'track', 'artist'
 
 model = CatBoostRegressor(
     iterations=ITERATIONS,
-    learning_rate=0.2,
+    learning_rate=learning_rate,
     random_seed=SEED,
     task_type="GPU",
     use_best_model=True,
