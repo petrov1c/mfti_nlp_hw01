@@ -10,7 +10,7 @@ ITERATIONS = int(os.environ['ITERATIONS'])
 FULL = bool(int(os.environ['FULL']))
 learning_rate = float(os.environ['learning_rate'])
 
-SEED = 42
+SEED = 1985
 TRAIN_COLUMNS = ['user', 'track', 'artist', 'pop', 'duration']
 
 tracks = pd.read_json("data/tracks.json", lines=True)
