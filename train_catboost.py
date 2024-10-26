@@ -24,7 +24,7 @@ train_pool = Pool(data=X_train, label=y_train, cat_features=['user', 'track', 'a
 val_pool = Pool(data=X_val, label=y_val, cat_features=['user', 'track', 'artist'])
 
 model = CatBoostRegressor(
-    iterations=150,
+    iterations=40000,
     learning_rate=0.2,
     random_seed=SEED,
     task_type="GPU",
