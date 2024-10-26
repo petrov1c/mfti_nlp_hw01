@@ -1,8 +1,14 @@
+import os
+
 import pandas as pd
 from catboost import Pool, CatBoostRegressor
 from sklearn.model_selection import train_test_split
+from dotenv import load_dotenv
 
-VERSION = 6
+load_dotenv()
+ITERATIONS = int(os.environ['ITERATIONS'])
+FULL = bool(int(os.environ['FULL']))
+
 SEED = 42
 TRAIN_COLUMNS = ['user', 'track', 'artist', 'pop', 'duration']
 
@@ -11,11 +17,14 @@ train_data = pd.read_csv("data/train.csv")
 
 train_data = pd.merge(train_data, tracks, how='left', on='track')
 
-# train_split, val_split = train_test_split(train_data, test_size=0.15, random_state=seed, shuffle=True, stratify=train_data['rate'])
 train_split, val_split = train_test_split(train_data, test_size=0.1, random_state=SEED)
 
-X_train = train_data[TRAIN_COLUMNS]
-y_train = train_data['time']
+if FULL:
+    X_train = train_data[TRAIN_COLUMNS]
+    y_train = train_data['time']
+else:
+    X_train = train_split[TRAIN_COLUMNS]
+    y_train = train_split['time']
 
 X_val = pd.DataFrame(val_split[TRAIN_COLUMNS])
 y_val = val_split['time']
@@ -24,7 +33,7 @@ train_pool = Pool(data=X_train, label=y_train, cat_features=['user', 'track', 'a
 val_pool = Pool(data=X_val, label=y_val, cat_features=['user', 'track', 'artist'])
 
 model = CatBoostRegressor(
-    iterations=40000,
+    iterations=ITERATIONS,
     learning_rate=0.2,
     random_seed=SEED,
     task_type="GPU",
