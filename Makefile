@@ -9,3 +9,7 @@ train_ranker:
 .PHONY: run
 run:
 	PYTHONPATH=. python run_catboost.py
+
+.PHONY: run_ranker
+run_ranker:
+	PYTHONPATH=. python run_catboost_ranker.py

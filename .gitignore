@@ -1,3 +1,4 @@
 /catboost_model.dump
 /catboost_info/
 /.idea/
+/catboost_ranker.dump
