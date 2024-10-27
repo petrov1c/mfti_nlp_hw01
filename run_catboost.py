@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 VERSION = os.environ['VERSION']
-rmse = os.environ['rmse']
 
 TRAIN_COLUMNS = ['user', 'track', 'artist', 'genre', 'pop', 'duration']
 
@@ -23,7 +22,7 @@ model.load_model('catboost_model.dump')
 y_test = model.predict(test_pool)
 
 test_data['score'] = y_test
-test_data[['user','track','score']].to_csv(f'submit/submit_catboost_{VERSION}_({rmse}).csv', index=False)
+test_data[['user','track','score']].to_csv(f'submit/submit_catboost_{VERSION}.csv', index=False)
 
 test_data.score = test_data.score.clip(0, 1)
-test_data[['user','track','score']].to_csv(f'submit/submit_catboost_clip_{VERSION}_({rmse}).csv', index=False)
+test_data[['user','track','score']].to_csv(f'submit/submit_catboost_clip_{VERSION}.csv', index=False)
