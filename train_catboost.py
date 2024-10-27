@@ -10,7 +10,6 @@ ITERATIONS = int(os.environ['ITERATIONS'])
 FULL = bool(int(os.environ['FULL']))
 learning_rate = float(os.environ['learning_rate'])
 
-SEED = 1985
 TRAIN_COLUMNS = ['user', 'track', 'artist', 'genre', 'pop', 'duration']
 
 tracks = pd.read_json("data/tracks.json", lines=True)
@@ -19,7 +18,7 @@ train_data = pd.read_csv("data/train.csv")
 train_data = pd.merge(train_data, tracks, how='left', on='track')
 train_data.genre = train_data.genre.map(lambda genres: genres[0])
 
-train_split, val_split = train_test_split(train_data, test_size=0.1, random_state=SEED)
+train_split, val_split = train_test_split(train_data, test_size=0.1)
 
 if FULL:
     X_train = train_data[TRAIN_COLUMNS]
@@ -37,7 +36,6 @@ val_pool = Pool(data=X_val, label=y_val, cat_features=['user', 'track', 'artist'
 model = CatBoostRegressor(
     iterations=ITERATIONS,
     learning_rate=learning_rate,
-    random_seed=SEED,
     task_type="GPU",
     use_best_model=True,
     eval_metric='RMSE',
