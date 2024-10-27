@@ -4,6 +4,7 @@ import pandas as pd
 from catboost import Pool, CatBoostRegressor
 from sklearn.model_selection import train_test_split
 from dotenv import load_dotenv
+from tqdm import tqdm
 
 load_dotenv()
 ITERATIONS = int(os.environ['ITERATIONS'])
@@ -15,8 +16,23 @@ TRAIN_COLUMNS = ['user', 'track', 'artist', 'genre', 'pop', 'duration']
 tracks = pd.read_json("data/tracks.json", lines=True)
 train_data = pd.read_csv("data/train.csv")
 
+new_tracks = []
+for idx in tqdm(tracks.index):
+    for genre in tracks.iloc[idx].genre:
+        new_tracks.append(
+            {
+                'track': tracks.iloc[idx].track,
+                'artist': tracks.iloc[idx].artist,
+                'genre': genre,
+                'pop': tracks.iloc[idx]['pop'],
+                'duration': tracks.iloc[idx].duration,
+            },
+        )
+
+tracks = pd.DataFrame.from_records(new_tracks)
+
 train_data = pd.merge(train_data, tracks, how='left', on='track')
-train_data.genre = train_data.genre.map(lambda genres: genres[0])
+# train_data.genre = train_data.genre.map(lambda genres: genres[0])
 
 train_split, val_split = train_test_split(train_data, test_size=0.1)
 
