@@ -36,7 +36,6 @@ y_val = val_split['time']
 train_pool = Pool(data=X_train, label=y_train, cat_features=['user', 'track', 'artist', 'genre'], group_id=X_train.user)
 val_pool = Pool(data=X_val, label=y_val, cat_features=['user', 'track', 'artist', 'genre'], group_id=X_val.user)
 
-ITERATIONS = 4000
 model = CatBoostRanker(
     iterations=ITERATIONS,
     custom_metric=['NDCG'],
